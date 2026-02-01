@@ -384,12 +384,13 @@ RUN chown -R "${NB_UID}:${NB_GID}" "${HOME}/.config/slicer.org" \
 # -------------------------
 # Backup configs for restoration when volumes are mounted
 # -------------------------
-RUN mkdir -p /tmp/config_backups && \
+RUN mkdir -p /tmp/config_backups/Desktop && \
     cp "${HOME}/.slicerrc.py" /tmp/config_backups/ && \
     cp "${HOME}/.config/slicer.org/Slicer.ini" /tmp/config_backups/ && \
     cp "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" /tmp/config_backups/ && \
     cp "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" /tmp/config_backups/ && \
     cp "${HOME}/.local/share/code-server/User/settings.json" /tmp/config_backups/code-server-settings.json && \
+    cp "${HOME}/Desktop/"*.desktop /tmp/config_backups/Desktop/ 2>/dev/null || true && \
     chmod -R 755 /tmp/config_backups
 
 # -------------------------

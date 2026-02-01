@@ -5,41 +5,64 @@ set -euo pipefail
 # Restore configs if missing (e.g., when /home/jovyan is mounted)
 # -------------------------
 restore_configs() {
-  echo "[start.sh] Checking for missing configs (may happen when volumes are mounted)..."
+  echo "[start.sh] ========================================="
+  echo "[start.sh] CONFIG RESTORATION DIAGNOSTICS"
+  echo "[start.sh] ========================================="
+  echo "[start.sh] Current HOME: ${HOME}"
+  echo "[start.sh] Current USER: $(whoami) (UID=$(id -u), GID=$(id -g))"
+  echo "[start.sh] JupyterHub mode: ${JUPYTERHUB_SERVICE_URL:-not detected}"
+  
+  echo "[start.sh] Mount points:"
+  mount | grep jovyan || echo "  (no jovyan mounts found)"
+  
+  echo "[start.sh] HOME contents before restoration:"
+  ls -la "${HOME}/" 2>&1 | head -20
+  
+  echo "[start.sh] HOME ownership:"
+  ls -ld "${HOME}" 2>&1
+  
+  # Verify backups exist
+  if [[ ! -d "/tmp/config_backups" ]]; then
+    echo "[start.sh] WARNING: /tmp/config_backups directory not found!"
+    return
+  fi
+  
+  echo "[start.sh] Backup directory contents:"
+  ls -laR /tmp/config_backups/ 2>&1 | head -30
   
   # Restore Slicer configs
   if [[ ! -f "${HOME}/.slicerrc.py" ]]; then
     echo "[start.sh] Restoring Slicer RC file..."
-    cp /tmp/config_backups/.slicerrc.py "${HOME}/.slicerrc.py" 2>/dev/null || true
+    cp /tmp/config_backups/.slicerrc.py "${HOME}/.slicerrc.py" 2>/dev/null || echo "[start.sh] Failed to restore .slicerrc.py"
   fi
   
   if [[ ! -f "${HOME}/.config/slicer.org/Slicer.ini" ]]; then
     echo "[start.sh] Restoring Slicer config..."
     mkdir -p "${HOME}/.config/slicer.org"
-    cp /tmp/config_backups/Slicer.ini "${HOME}/.config/slicer.org/Slicer.ini" 2>/dev/null || true
+    cp /tmp/config_backups/Slicer.ini "${HOME}/.config/slicer.org/Slicer.ini" 2>/dev/null || echo "[start.sh] Failed to restore Slicer.ini"
   fi
   
   # Restore XFCE configs
   if [[ ! -f "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" ]]; then
     echo "[start.sh] Restoring XFCE desktop config..."
     mkdir -p "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml"
-    cp /tmp/config_backups/xfce4-desktop.xml "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" 2>/dev/null || true
-    cp /tmp/config_backups/xsettings.xml "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" 2>/dev/null || true
+    cp /tmp/config_backups/xfce4-desktop.xml "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" 2>/dev/null || echo "[start.sh] Failed to restore xfce4-desktop.xml"
+    cp /tmp/config_backups/xsettings.xml "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" 2>/dev/null || echo "[start.sh] Failed to restore xsettings.xml"
   fi
   
   # Restore code-server configs
   if [[ ! -f "${HOME}/.local/share/code-server/User/settings.json" ]]; then
     echo "[start.sh] Restoring code-server config..."
     mkdir -p "${HOME}/.local/share/code-server/User"
-    cp /tmp/config_backups/code-server-settings.json "${HOME}/.local/share/code-server/User/settings.json" 2>/dev/null || true
+    cp /tmp/config_backups/code-server-settings.json "${HOME}/.local/share/code-server/User/settings.json" 2>/dev/null || echo "[start.sh] Failed to restore code-server settings"
   fi
   
   # Restore Desktop shortcuts
   if [[ ! -f "${HOME}/Desktop/Slicer.desktop" ]]; then
-    echo "[start.sh] Restoring Slicer desktop shortcut..."
+    echo "[start.sh] Restoring Desktop shortcuts..."
     mkdir -p "${HOME}/Desktop"
-    cp /usr/share/applications/Slicer.desktop "${HOME}/Desktop/Slicer.desktop" 2>/dev/null || true
-    chmod +x "${HOME}/Desktop/Slicer.desktop" 2>/dev/null || true
+    cp /tmp/config_backups/Desktop/*.desktop "${HOME}/Desktop/" 2>/dev/null || echo "[start.sh] Failed to restore Desktop shortcuts"
+    chmod +x "${HOME}/Desktop/"*.desktop 2>/dev/null || true
   fi
   
   echo "[start.sh] Config restoration complete."
