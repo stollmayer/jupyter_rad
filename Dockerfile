@@ -279,13 +279,14 @@ RUN set -eux; \
 ARG SLICER_URL="https://download.slicer.org/download?os=linux&stability=release"
 ARG LOCAL_SLICER_FOLDER=""
 
-# Copy local Slicer if provided, otherwise download
-COPY ${LOCAL_SLICER_FOLDER:-certs/} /tmp/local_slicer_temp/
+# Copy local Slicer if provided
+RUN mkdir -p /tmp/local_slicer_temp
+COPY --chown=${NB_UID}:${NB_GID} ${LOCAL_SLICER_FOLDER:-certs/.gitkeep} /tmp/local_slicer_temp/
 
 RUN set -eux; \
-    if [ -d "/tmp/local_slicer_temp" ] && [ "$(ls -A /tmp/local_slicer_temp | grep -v '.gitkeep' | wc -l)" -gt 0 ]; then \
+    if [ -d "/tmp/local_slicer_temp" ] && [ "$(find /tmp/local_slicer_temp -mindepth 1 -type d -name 'Slicer*' | wc -l)" -gt 0 ]; then \
       echo "Using local Slicer installation..."; \
-      slicer_dir=$(ls -d /tmp/local_slicer_temp/Slicer* 2>/dev/null | head -1 || true); \
+      slicer_dir=$(find /tmp/local_slicer_temp -mindepth 1 -maxdepth 2 -type d -name 'Slicer*' | head -1); \
       if [ -n "${slicer_dir}" ]; then \
         mv "${slicer_dir}" /opt/Slicer; \
       else \
