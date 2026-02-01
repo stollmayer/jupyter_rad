@@ -296,7 +296,15 @@ RUN set -eux; \
     else \
       echo "Downloading Slicer from ${SLICER_URL}..."; \
       SLICER_TGZ=/tmp/slicer.tar.gz; \
-      wget -O "${SLICER_TGZ}" "${SLICER_URL}"; \
+      # Configure wget for proxy and certificates
+      WGET_OPTS="--no-check-certificate"; \
+      if [ -n "${http_proxy:-}" ]; then \
+        WGET_OPTS="${WGET_OPTS} -e use_proxy=yes -e http_proxy=${http_proxy}"; \
+      fi; \
+      if [ -n "${https_proxy:-}" ]; then \
+        WGET_OPTS="${WGET_OPTS} -e https_proxy=${https_proxy}"; \
+      fi; \
+      wget ${WGET_OPTS} -O "${SLICER_TGZ}" "${SLICER_URL}"; \
       topdir="$(tar -tzf "${SLICER_TGZ}" | head -1 | cut -d/ -f1)"; \
       tar -xzf "${SLICER_TGZ}" -C /opt; \
       rm -f "${SLICER_TGZ}"; \
