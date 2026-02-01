@@ -1,0 +1,3 @@
+# This directory is for optional custom certificates
+# Place .crt or .pem certificate files here and build with:
+# docker build --build-arg CERTS_FOLDER=./certs/ -t your-image .

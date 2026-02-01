@@ -1,0 +1,20 @@
+#!/bin/sh
+cd "$HOME"
+
+# Start XFCE in the background
+dbus-launch xfce4-session &
+
+# Wait longer for the desktop to fully initialize
+sleep 5
+
+# Auto-start 3D Slicer if available
+if [ -x /opt/Slicer/Slicer ]; then
+    echo "Starting 3D Slicer..." > /tmp/slicer_autostart.log
+    DISPLAY=:1 /opt/Slicer/Slicer >> /tmp/slicer_autostart.log 2>&1 &
+    echo "3D Slicer started with PID $!" >> /tmp/slicer_autostart.log
+else
+    echo "Slicer executable not found at /opt/Slicer/Slicer" > /tmp/slicer_autostart.log
+fi
+
+# Keep the session alive
+wait

@@ -1,0 +1,15 @@
+#./.github/workflows/binder-badge.yaml
+name: Binder Badge
+on:
+  pull_request_target:
+
+jobs:
+  badge:
+    runs-on: ubuntu-22.04
+    permissions:
+      pull-requests: write
+
+    steps:
+      - uses: manics/action-binderbadge@v3.0.0
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}

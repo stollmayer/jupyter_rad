@@ -1,0 +1,57 @@
+<!--
+    Derived from https://github.com/novnc/noVNC/blob/v1.4.0/vnc_lite.html, which was licensed
+    under the 2-clause BSD license
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Jupyter Remote Desktop Proxy</title>
+
+    <meta charset="utf-8" />
+
+    <!-- Always force latest IE rendering engine (even in intranet) &
+                Chrome Frame. -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <link href="{{ base_url }}desktop/static/dist/index.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div id="top-bar">
+      <a href=".." id="logo">
+        <img src="{{base_url}}desktop/static/jupyter-logo.svg" />
+      </a>
+      <ul id="menu">
+        <li id="status-container">
+          <span id="status-label">Status:</span>
+          <span id="status">Connecting...</span>
+        </li>
+        <li>
+          <a id="clipboard-button" href="#">Remote Clipboard</a>
+        </li>
+        {% if hub_control_panel_url %}
+        <li>
+          <a href="{{ hub_control_panel_url }}">Hub Control Panel</a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+    <div id="screen">
+      <!-- This is where the remote screen will appear -->
+    </div>
+
+    <!-- Clipboard -->
+    <div id="clipboard-container" class="clipboard-container hidden">
+      <div class="arrow"></div>
+      <div id="clipboard-content">
+        <p>
+          Contents of this text box are synced with the clipboard on the remote
+          desktop
+        </p>
+        <textarea id="clipboard-text" rows="5"></textarea>
+      </div>
+    </div>
+
+    <script src="{{base_url}}desktop/static/dist/viewer.js"></script>
+  </body>
+</html>
