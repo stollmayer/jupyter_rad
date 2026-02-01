@@ -1,7 +1,56 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# If launched by JupyterHub, these env vars will be present.
+# -------------------------
+# Restore configs if missing (e.g., when /home/jovyan is mounted)
+# -------------------------
+restore_configs() {
+  echo "[start.sh] Checking for missing configs (may happen when volumes are mounted)..."
+  
+  # Restore Slicer configs
+  if [[ ! -f "${HOME}/.slicerrc.py" ]]; then
+    echo "[start.sh] Restoring Slicer RC file..."
+    cp /tmp/config_backups/.slicerrc.py "${HOME}/.slicerrc.py" 2>/dev/null || true
+  fi
+  
+  if [[ ! -f "${HOME}/.config/slicer.org/Slicer.ini" ]]; then
+    echo "[start.sh] Restoring Slicer config..."
+    mkdir -p "${HOME}/.config/slicer.org"
+    cp /tmp/config_backups/Slicer.ini "${HOME}/.config/slicer.org/Slicer.ini" 2>/dev/null || true
+  fi
+  
+  # Restore XFCE configs
+  if [[ ! -f "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" ]]; then
+    echo "[start.sh] Restoring XFCE desktop config..."
+    mkdir -p "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml"
+    cp /tmp/config_backups/xfce4-desktop.xml "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" 2>/dev/null || true
+    cp /tmp/config_backups/xsettings.xml "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" 2>/dev/null || true
+  fi
+  
+  # Restore code-server configs
+  if [[ ! -f "${HOME}/.local/share/code-server/User/settings.json" ]]; then
+    echo "[start.sh] Restoring code-server config..."
+    mkdir -p "${HOME}/.local/share/code-server/User"
+    cp /tmp/config_backups/code-server-settings.json "${HOME}/.local/share/code-server/User/settings.json" 2>/dev/null || true
+  fi
+  
+  # Restore Desktop shortcuts
+  if [[ ! -f "${HOME}/Desktop/Slicer.desktop" ]]; then
+    echo "[start.sh] Restoring Slicer desktop shortcut..."
+    mkdir -p "${HOME}/Desktop"
+    cp /usr/share/applications/Slicer.desktop "${HOME}/Desktop/Slicer.desktop" 2>/dev/null || true
+    chmod +x "${HOME}/Desktop/Slicer.desktop" 2>/dev/null || true
+  fi
+  
+  echo "[start.sh] Config restoration complete."
+}
+
+# Run config restoration
+restore_configs
+
+# -------------------------
+# JupyterHub vs Standalone detection
+# -------------------------
 if [[ -n "${JUPYTERHUB_SERVICE_URL:-}" ]]; then
   echo "[start.sh] Detected JupyterHub environment -> starting jupyterhub-singleuser"
   exec jupyterhub-singleuser "$@"

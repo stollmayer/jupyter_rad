@@ -378,9 +378,19 @@ RUN chown -R "${NB_UID}:${NB_GID}" "${HOME}/.local/share/code-server"
 RUN mkdir -p "${HOME}/.config/NA-MIC" "${HOME}/.config/slicer.org"
 COPY SlicerRC.py "${HOME}/.slicerrc.py"
 COPY Slicer.ini "${HOME}/.config/slicer.org/Slicer.ini"
-RUN chown -R "${NB_UID}:${NB_GID}" "${HOME}/.slicerrc.py" \
-                                     "${HOME}/.config/slicer.org" \
+RUN chown -R "${NB_UID}:${NB_GID}" "${HOME}/.config/slicer.org" \
                                      "${HOME}/.config/NA-MIC"
+
+# -------------------------
+# Backup configs for restoration when volumes are mounted
+# -------------------------
+RUN mkdir -p /tmp/config_backups && \
+    cp "${HOME}/.slicerrc.py" /tmp/config_backups/ && \
+    cp "${HOME}/.config/slicer.org/Slicer.ini" /tmp/config_backups/ && \
+    cp "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" /tmp/config_backups/ && \
+    cp "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" /tmp/config_backups/ && \
+    cp "${HOME}/.local/share/code-server/User/settings.json" /tmp/config_backups/code-server-settings.json && \
+    chmod -R 755 /tmp/config_backups
 
 # -------------------------
 # Copy startup script that supports both JupyterHub and standalone docker run

@@ -192,14 +192,17 @@ singleuser:
     limit: 8
     guarantee: 4
   
-  # Storage
+  # Storage - mount to /home/jovyan/work to preserve configs
   storage:
     capacity: 10Gi
+    homeMountPath: /home/jovyan/work
   
   # User permissions
   uid: 1000
   fsGid: 100
 ```
+
+**Important**: Mount persistent storage to `/home/jovyan/work` instead of `/home/jovyan` to preserve pre-configured settings (Slicer configs, desktop shortcuts, VS Code settings, etc.). If you must mount to `/home/jovyan`, the startup script will automatically restore missing configs.
 
 For GPU access, users can request GPUs through the resource limits without needing a separate profile.
 
