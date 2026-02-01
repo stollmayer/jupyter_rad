@@ -1,4 +1,4 @@
-# JupyterHub + PyTorch + 3D Slicer + VS Code Docker Image
+# JupyterLab + PyTorch + 3D Slicer + VS Code Docker Image
 
 A comprehensive Docker image combining JupyterLab, PyTorch with CUDA support, 3D Slicer medical imaging platform, and VS Code in a browser-accessible environment with VNC desktop.
 
