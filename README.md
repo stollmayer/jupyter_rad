@@ -97,20 +97,6 @@ docker build \
 docker run --rm -it -p 8888:8888 jupyter_rad:dev
 ```
 
-### With GPU Support
-
-```bash
-docker run --rm --gpus all -it -p 8888:8888 jupyter_rad:dev
-```
-
-### With Increased Shared Memory (Recommended)
-
-To prevent browser crashes in 3D Slicer, increase shared memory:
-
-```bash
-docker run --rm -it --shm-size=2g -p 8888:8888 jupyter_rad:dev
-```
-
 ### Full Example: GPU + Memory
 
 ```bash
@@ -145,7 +131,7 @@ The authentication token is displayed when the container starts.
 
 ### Kubernetes JupyterHub Setup
 
-This image is designed to work with [JupyterHub on Kubernetes](https://z2jh.jupyter.org/). Configure it in your `values.yaml` file:
+This image is designed to work with [JupyterHub on Kubernetes](https://z2jh.jupyter.org/). Configure it in your `values.yaml` file.
 
 Once users spawn their server, they can access:
 
