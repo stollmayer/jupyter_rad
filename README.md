@@ -1,17 +1,34 @@
 # Jupyter Rad
 
-## Introduction
-Jupyter Rad is an advanced tool for data analysis and visualization using Jupyter notebooks, providing a seamless interface for data scientists and analysts.
+## Overview
 
-## Features
-- **Interactive Data Visualizations:** Create stunning visualizations interactively.
-- **Support for Multiple Data Formats:** Easily work with CSV, JSON, and SQL databases.
-- **Integration with Popular Libraries:** Built on top of libraries like Pandas and Matplotlib.
+Jupyter Rad is a powerful tool for data science and machine learning. It provides a flexible framework that allows for easy integration with various data sources and tools.
 
-## Build Instructions
-1. Clone the repository: `git clone https://github.com/stollmayer/jupyter_rad.git`
-2. Navigate to the project directory: `cd jupyter_rad`
-3. Install dependencies: `pip install -r requirements.txt`
-4. Launch Jupyter: `jupyter notebook`
+## Installation
 
-Enjoy using Jupyter Rad for your projects!
+To install Jupyter Rad, you can use pip:
+
+```bash
+pip install jupyter_rad
+```
+
+## Usage
+
+Here's a simple example of how to use Jupyter Rad:
+
+```python
+import jupyter_rad as jr
+
+# Sample code
+data = jr.load_data('data.csv')
+results = jr.process_data(data)
+jr.visualize(results)
+```
+
+## Contributing
+
+We welcome contributions! Please read our [contributing guidelines](CONTRIBUTING.md) for more information on how to get started.
+
+## License
+
+Jupyter Rad is licensed under the MIT License.
