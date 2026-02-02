@@ -131,7 +131,6 @@ docker run --rm -it \
 | `--shm-size=2g` | Increase shared memory to 2GB (prevents Slicer crashes) |
 | `-p 8888:8888` | Expose JupyterLab port |
 
-
 ## Accessing the Services
 
 Access the services in your browser:
