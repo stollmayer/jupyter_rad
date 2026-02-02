@@ -202,10 +202,6 @@ singleuser:
   fsGid: 100
 ```
 
-
-
-For GPU access, users can request GPUs through the resource limits without needing a separate profile.
-
 #### Shared Memory Configuration
 
 The shared memory mount is **required** to prevent 3D Slicer crashes:
