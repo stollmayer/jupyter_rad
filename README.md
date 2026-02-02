@@ -182,27 +182,6 @@ singleuser:
   fsGid: 100
 ```
 
-#### GPU Configuration
-
-For GPU access, users can request GPUs through the resource limits without needing a separate profile.
-
-#### Shared Memory Configuration
-
-The shared memory mount is **required** to prevent 3D Slicer crashes:
-
-```yaml
-singleuser:
-  storage:
-    extraVolumes:
-      - name: shm
-        emptyDir:
-          medium: Memory
-          sizeLimit: 2Gi
-    extraVolumeMounts:
-      - name: shm
-        mountPath: /dev/shm
-```
-
 ### Deploying JupyterHub
 
 Install or upgrade your JupyterHub deployment:
