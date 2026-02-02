@@ -182,6 +182,8 @@ singleuser:
   fsGid: 100
 ```
 
+#### GPU Configuration
+
 For GPU access, users can request GPUs through the resource limits without needing a separate profile.
 
 #### Shared Memory Configuration
