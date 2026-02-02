@@ -91,39 +91,7 @@ docker build \
 
 ## Running the Container
 
-### Basic Run
-
-```bash
-docker run --rm -it -p 8888:8888 jupyter_rad:dev
-```
-
-### With GPU Support
-
-```bash
-docker run --rm --gpus all -it -p 8888:8888 jupyter_rad:dev
-```
-
-### With Increased Shared Memory (Recommended)
-
-To prevent browser crashes in 3D Slicer, increase shared memory:
-
-```bash
-docker run --rm -it --shm-size=2g -p 8888:8888 jupyter_rad:dev
-```
-
-### With Persistent Storage
-
-Mount a volume to persist user data:
-
-```bash
-docker run --rm -it \
-  --shm-size=2g \
-  -p 8888:8888 \
-  -v /path/to/data:/home/jovyan/work \
-  jupyter_rad:dev
-```
-
-### Full Example: GPU + Memory + Storage
+### GPU + Memory + Storage:
 
 ```bash
 docker run --rm -it \
@@ -200,23 +168,6 @@ singleuser:
   # User permissions
   uid: 1000
   fsGid: 100
-```
-
-#### Shared Memory Configuration
-
-The shared memory mount is **required** to prevent 3D Slicer crashes:
-
-```yaml
-singleuser:
-  storage:
-    extraVolumes:
-      - name: shm
-        emptyDir:
-          medium: Memory
-          sizeLimit: 2Gi
-    extraVolumeMounts:
-      - name: shm
-        mountPath: /dev/shm
 ```
 
 ### Deploying JupyterHub
