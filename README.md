@@ -111,27 +111,13 @@ To prevent browser crashes in 3D Slicer, increase shared memory:
 docker run --rm -it --shm-size=2g -p 8888:8888 jupyter_rad:dev
 ```
 
-### With Persistent Storage
-
-Mount a volume to persist user data:
-
-```bash
-docker run --rm -it \
-  --shm-size=2g \
-  -p 8888:8888 \
-  -v /path/to/data:/home/jovyan/work \
-  jupyter_rad:dev
-```
-
-### Full Example: GPU + Memory + Storage
+### Full Example: GPU + Memory
 
 ```bash
 docker run --rm -it \
   --gpus all \
   --shm-size=2g \
   -p 8888:8888 \
-  -v $PWD/data:/home/jovyan/work \
-  -v $PWD/notebooks:/home/jovyan/notebooks \
   jupyter_rad:dev
 ```
 
@@ -144,7 +130,7 @@ docker run --rm -it \
 | `--gpus all` | Enable all GPUs for CUDA workloads |
 | `--shm-size=2g` | Increase shared memory to 2GB (prevents Slicer crashes) |
 | `-p 8888:8888` | Expose JupyterLab port |
-| `-v <host>:<container>` | Mount volumes for persistent storage |
+
 
 ## Accessing the Services
 
@@ -192,17 +178,10 @@ singleuser:
     limit: 8
     guarantee: 4
   
-  # Storage - mount to /home/jovyan/work to preserve configs
-  storage:
-    capacity: 10Gi
-    homeMountPath: /home/jovyan/work
-  
   # User permissions
   uid: 1000
   fsGid: 100
 ```
-
-**Important**: Mount persistent storage to `/home/jovyan/work` instead of `/home/jovyan` to preserve pre-configured settings (Slicer configs, desktop shortcuts, VS Code settings, etc.). If you must mount to `/home/jovyan`, the startup script will automatically restore missing configs.
 
 For GPU access, users can request GPUs through the resource limits without needing a separate profile.
 
